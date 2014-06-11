@@ -1,2 +1,77 @@
 2014-06-10 15:41:56,859 INFO: NQuill startup [in C:\Users\Grant\Documents\GitHub\NoJii\app\__init__.py:26]
 2014-06-10 15:42:48,259 INFO: NQuill startup [in C:\Users\Grant\Documents\GitHub\NoJii\app\__init__.py:26]
+2014-06-10 19:55:02,970 INFO: NQuill startup [in C:\Users\Grant\Documents\GitHub\NoJii\app\__init__.py:26]
+2014-06-10 20:03:14,625 INFO: NQuill startup [in C:\Users\Grant\Documents\GitHub\NoJii\app\__init__.py:26]
+2014-06-10 20:22:28,207 INFO: NQuill startup [in C:\Users\Grant\Documents\GitHub\NoJii\app\__init__.py:26]
+2014-06-10 20:24:13,790 INFO: NQuill startup [in C:\Users\Grant\Documents\GitHub\NoJii\app\__init__.py:26]
+2014-06-10 20:24:58,299 INFO: NQuill startup [in C:\Users\Grant\Documents\GitHub\NoJii\app\__init__.py:26]
+2014-06-10 20:26:36,753 INFO: NQuill startup [in C:\Users\Grant\Documents\GitHub\NoJii\app\__init__.py:26]
+2014-06-11 16:02:26,006 INFO: NQuill startup [in C:\Users\Grant\Documents\GitHub\NoJii\app\__init__.py:26]
+2014-06-11 16:02:56,990 INFO: NQuill startup [in C:\Users\Grant\Documents\GitHub\NoJii\app\__init__.py:26]
+2014-06-11 16:03:05,375 INFO: NQuill startup [in C:\Users\Grant\Documents\GitHub\NoJii\app\__init__.py:26]
+2014-06-11 16:04:45,815 INFO: NQuill startup [in C:\Users\Grant\Documents\GitHub\NoJii\app\__init__.py:26]
+2014-06-11 16:05:12,605 INFO: NQuill startup [in C:\Users\Grant\Documents\GitHub\NoJii\app\__init__.py:26]
+2014-06-11 16:06:26,062 INFO: NQuill startup [in C:\Users\Grant\Documents\GitHub\NoJii\app\__init__.py:26]
+2014-06-11 16:07:11,601 INFO: NQuill startup [in C:\Users\Grant\Documents\GitHub\NoJii\app\__init__.py:26]
+2014-06-11 16:07:44,621 ERROR: Exception on /user/Dup [GET] [in C:\Python27\lib\site-packages\flask\app.py:1306]
+Traceback (most recent call last):
+  File "C:\Python27\lib\site-packages\flask\app.py", line 1687, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Python27\lib\site-packages\flask\app.py", line 1360, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Python27\lib\site-packages\flask\app.py", line 1358, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Python27\lib\site-packages\flask\app.py", line 1344, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\Python27\lib\site-packages\flask_login.py", line 758, in decorated_view
+    return func(*args, **kwargs)
+  File "C:\Users\Grant\Documents\GitHub\NoJii\app\views.py", line 99, in user
+    posts = posts)
+  File "C:\Python27\lib\site-packages\flask\templating.py", line 124, in render_template
+    return _render(ctx.app.jinja_env.get_or_select_template(template_name_or_list),
+  File "C:\Python27\lib\site-packages\jinja2\environment.py", line 830, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+  File "C:\Python27\lib\site-packages\jinja2\environment.py", line 791, in get_template
+    return self._load_template(name, self.make_globals(globals))
+  File "C:\Python27\lib\site-packages\jinja2\environment.py", line 765, in _load_template
+    template = self.loader.load(self, name, globals)
+  File "C:\Python27\lib\site-packages\jinja2\loaders.py", line 125, in load
+    code = environment.compile(source, name, filename)
+  File "C:\Python27\lib\site-packages\jinja2\environment.py", line 554, in compile
+    self.handle_exception(exc_info, source_hint=source)
+  File "C:\Python27\lib\site-packages\jinja2\environment.py", line 742, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "C:\Users\Grant\Documents\GitHub\NoJii\app\templates\user.html", line 14, in template
+    <a href="{{url_for('follow'), nickname = user.nickname)}}">Follow</a>
+TemplateSyntaxError: expected token 'end of print statement', got '='
+2014-06-11 16:10:08,937 ERROR: Exception on /user/Dup [GET] [in C:\Python27\lib\site-packages\flask\app.py:1306]
+Traceback (most recent call last):
+  File "C:\Python27\lib\site-packages\flask\app.py", line 1687, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Python27\lib\site-packages\flask\app.py", line 1360, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Python27\lib\site-packages\flask\app.py", line 1358, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Python27\lib\site-packages\flask\app.py", line 1344, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\Python27\lib\site-packages\flask_login.py", line 758, in decorated_view
+    return func(*args, **kwargs)
+  File "C:\Users\Grant\Documents\GitHub\NoJii\app\views.py", line 99, in user
+    posts = posts)
+  File "C:\Python27\lib\site-packages\flask\templating.py", line 124, in render_template
+    return _render(ctx.app.jinja_env.get_or_select_template(template_name_or_list),
+  File "C:\Python27\lib\site-packages\jinja2\environment.py", line 830, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+  File "C:\Python27\lib\site-packages\jinja2\environment.py", line 791, in get_template
+    return self._load_template(name, self.make_globals(globals))
+  File "C:\Python27\lib\site-packages\jinja2\environment.py", line 765, in _load_template
+    template = self.loader.load(self, name, globals)
+  File "C:\Python27\lib\site-packages\jinja2\loaders.py", line 125, in load
+    code = environment.compile(source, name, filename)
+  File "C:\Python27\lib\site-packages\jinja2\environment.py", line 554, in compile
+    self.handle_exception(exc_info, source_hint=source)
+  File "C:\Python27\lib\site-packages\jinja2\environment.py", line 742, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "C:\Users\Grant\Documents\GitHub\NoJii\app\templates\user.html", line 15, in template
+    <a href="{{url_for('follow'), nickname = user.nickname)}}">Follow</a>
+TemplateSyntaxError: expected token 'end of print statement', got '='
