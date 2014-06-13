@@ -1,4 +1,6 @@
-Air
+LiB
 ===
 
-A minimal micro blogging server written with Flask
+A minimal blogging website powered by flask.
+
+<h1>Currently under heavy development</h1>
