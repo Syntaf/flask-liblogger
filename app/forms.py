@@ -1,4 +1,5 @@
 from flask.ext.wtf import Form
+from models import User
 from wtforms import TextField, BooleanField, TextAreaField
 from wtforms.validators import Required, Length
 
@@ -24,3 +25,6 @@ class EditForm(Form):
 			self.nickname.errors.append('This nickname is already in use. Please choose another one.')
 			return False
 		return True
+
+class SearchForm(Form):
+	search = TextField('search', validators = [Required()])
