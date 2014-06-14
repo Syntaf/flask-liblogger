@@ -1,0 +1,10 @@
+{{user.nickname}},
+
+{{follower.nickname}} is now a follower. Click on the follwing link to 
+visit {{follower.nickname}}'s profile page:
+
+{{url_for('user', nickname=follower.nickname, _external = True)}}
+
+Regards,
+
+The lithium blogging admin
