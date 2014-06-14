@@ -3,8 +3,8 @@ from flask.ext.login import login_user, logout_user, current_user, login_require
 from app import app, db, lm, oid
 from models import User, Post, ROLE_USER, ROLE_ADMIN
 from datetime import datetime
-from config import MAX_SEARCH_RESULTS
-from forms import LoginForm, EditForm, SearchForm
+from config import MAX_SEARCH_RESULTS, POSTS_PER_PAGE
+from forms import LoginForm, EditForm, SearchForm, PostForm
 from emails import follower_notification
 
 
@@ -31,25 +31,23 @@ def internal_error(error):
 	db.session.rollback()
 	return render_template('500.html'), 500
 
-@app.route('/')
-@app.route('/index')
+@app.route('/', methods = ['GET', 'POST'])
+@app.route('/index', methods = ['GET', 'POST'])
+@app.route('/index/<int:page>', methods = ['GET', 'POST'])
 @login_required
-def index():
-	user = g.user
-	posts = [
-		{ 
-			'author': { 'nickname': 'John' }, 
-			'body': 'Beautiful day in Portland!' 
-		},
-		{ 
-			'author': { 'nickname': 'Susan' }, 
-			'body': 'The Avengers movie was so cool!' 
-		}
-	]
+def index(page=1):
+	form = PostForm()
+	if form.validate_on_submit():
+		post = Post(body = form.post.data, timestamp = datetime.utcnow(), author = g.user)
+		db.session.add(post)
+		db.session.commit()
+		flash('Your post is now live!')
+		return redirect(url_for('index'))
+	posts = g.user.followed_posts().paginate(page, POSTS_PER_PAGE, False)
 	return render_template('index.html',
-		title = 'LithiumBlogging',
-		user = user,
-		posts = posts)
+			title = 'LiBlog',
+			form = form,
+			posts = posts)
 
 @app.route('/login', methods = ['GET', 'POST'])
 @oid.loginhandler
