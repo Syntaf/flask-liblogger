@@ -1,17 +1,24 @@
-from flask import render_template, flash, redirect, session, url_for, request, g
+from flask import render_template, flash, redirect, session, url_for, request, g, jsonify
 from flask.ext.login import login_user, logout_user, current_user, login_required
-from app import app, db, lm, oid
-from models import User, Post, ROLE_USER, ROLE_ADMIN
+from flask.ext.sqlalchemy import get_debug_queries
+from flask.ext.babel import gettext
+from app import app, db, lm, oid, babel
+from forms import LoginForm, EditForm, PostForm, SearchForm
+from models import User, ROLE_USER, ROLE_ADMIN, Post
 from datetime import datetime
-from config import MAX_SEARCH_RESULTS, POSTS_PER_PAGE, WHOOSH_ENABLED
-from forms import LoginForm, EditForm, SearchForm, PostForm
 from emails import follower_notification
-
+from guess_language import guessLanguage
+from translate import microsoft_translate
+from config import POSTS_PER_PAGE, MAX_SEARCH_RESULTS, LANGUAGES, DATABASE_QUERY_TIMEOUT, WHOOSH_ENABLED
 
 @lm.user_loader
 def load_user(id):
     return User.query.get(int(id))
 
+@babel.localeselector
+def get_locale():
+    return request.accept_languages.best_match(LANGUAGES.keys())
+    
 @app.before_request
 def before_request():
     g.user = current_user
@@ -23,6 +30,12 @@ def before_request():
     g.locale = get_locale()
     g.search_enabled = WHOOSH_ENABLED
 
+@app.after_request
+def after_request(response):
+    for query in get_debug_queries():
+        if query.duration >= DATABASE_QUERY_TIMEOUT:
+            app.logger.warning("SLOW QUERY: %s\nParameters: %s\nDuration: %fs\nContext: %s\n" % (query.statement, query.parameters, query.duration, query.context))
+    return response
 
 @app.errorhandler(404)
 def internal_error(error):
@@ -37,19 +50,25 @@ def internal_error(error):
 @app.route('/index', methods = ['GET', 'POST'])
 @app.route('/index/<int:page>', methods = ['GET', 'POST'])
 @login_required
-def index(page=1):
+def index(page = 1):
     form = PostForm()
     if form.validate_on_submit():
-        post = Post(body = form.post.data, timestamp = datetime.utcnow(), author = g.user)
+        language = guessLanguage(form.post.data)
+        if language == 'UNKNOWN' or len(language) > 5:
+            language = ''
+        post = Post(body = form.post.data,
+            timestamp = datetime.utcnow(),
+            author = g.user,
+            language = language)
         db.session.add(post)
         db.session.commit()
-        flash('Your post is now live!')
+        flash(gettext('Your post is now live!'))
         return redirect(url_for('index'))
     posts = g.user.followed_posts().paginate(page, POSTS_PER_PAGE, False)
     return render_template('index.html',
-            title = 'LiBlog',
-            form = form,
-            posts = posts)
+        title = 'Home',
+        form = form,
+        posts = posts)
 
 @app.route('/login', methods = ['GET', 'POST'])
 @oid.loginhandler
@@ -60,7 +79,7 @@ def login():
     if form.validate_on_submit():
         session['remember_me'] = form.remember_me.data
         return oid.try_login(form.openid.data, ask_for = ['nickname', 'email'])
-    return render_template('login.html',
+    return render_template('login.html', 
         title = 'Sign In',
         form = form,
         providers = app.config['OPENID_PROVIDERS'])
@@ -68,13 +87,14 @@ def login():
 @oid.after_login
 def after_login(resp):
     if resp.email is None or resp.email == "":
-        flash('Invalid login. Please try again.')
+        flash(gettext('Invalid login. Please try again.'))
         return redirect(url_for('login'))
     user = User.query.filter_by(email = resp.email).first()
     if user is None:
         nickname = resp.nickname
         if nickname is None or nickname == "":
             nickname = resp.email.split('@')[0]
+        nickname = User.make_valid_nickname(nickname)
         nickname = User.make_unique_nickname(nickname)
         user = User(nickname = nickname, email = resp.email, role = ROLE_USER)
         db.session.add(user)
@@ -93,18 +113,16 @@ def after_login(resp):
 def logout():
     logout_user()
     return redirect(url_for('index'))
-
+    
 @app.route('/user/<nickname>')
+@app.route('/user/<nickname>/<int:page>')
 @login_required
-def user(nickname):
+def user(nickname, page = 1):
     user = User.query.filter_by(nickname = nickname).first()
     if user == None:
-        flash('User ' + nickname + ' not found.')
+        flash(gettext('User %(nickname)s not found.', nickname = nickname))
         return redirect(url_for('index'))
-    posts = [
-        { 'author': user, 'body': 'Test post #1' },
-        { 'author': user, 'body': 'Test post #2' }
-    ]
+    posts = user.posts.paginate(page, POSTS_PER_PAGE, False)
     return render_template('user.html',
         user = user,
         posts = posts)
@@ -118,7 +136,7 @@ def edit():
         g.user.about_me = form.about_me.data
         db.session.add(g.user)
         db.session.commit()
-        flash('Your changes have been saved.')
+        flash(gettext('Your changes have been saved.'))
         return redirect(url_for('edit'))
     elif request.method != "POST":
         form.nickname.data = g.user.nickname
@@ -133,13 +151,16 @@ def follow(nickname):
     if user == None:
         flash('User ' + nickname + ' not found.')
         return redirect(url_for('index'))
+    if user == g.user:
+        flash(gettext('You can\'t follow yourself!'))
+        return redirect(url_for('user', nickname = nickname))
     u = g.user.follow(user)
     if u is None:
-        flash('Cannot follow ' + nickname + '.')
+        flash(gettext('Cannot follow %(nickname)s.', nickname = nickname))
         return redirect(url_for('user', nickname = nickname))
     db.session.add(u)
     db.session.commit()
-    flash('You are now following ' + nickname + '!')
+    flash(gettext('You are now following %(nickname)s!', nickname = nickname))
     follower_notification(user, g.user)
     return redirect(url_for('user', nickname = nickname))
 
@@ -150,29 +171,17 @@ def unfollow(nickname):
     if user == None:
         flash('User ' + nickname + ' not found.')
         return redirect(url_for('index'))
+    if user == g.user:
+        flash(gettext('You can\'t unfollow yourself!'))
+        return redirect(url_for('user', nickname = nickname))
     u = g.user.unfollow(user)
     if u is None:
-        flash('Cannot unfollow ' + nickname + '.')
+        flash(gettext('Cannot unfollow %(nickname)s.', nickname = nickname))
         return redirect(url_for('user', nickname = nickname))
     db.session.add(u)
     db.session.commit()
-    flash('You have stopped following ' + nickname + '.')
+    flash(gettext('You have stopped following %(nickname)s.', nickname = nickname))
     return redirect(url_for('user', nickname = nickname))
-
-@app.route('/search', methods=['POST'])
-@login_required
-def search():
-    if not g.search_form.validate_on_submit():
-        return redirect(url_for('index'))
-    return redirect(url_for('search_results', query=g.search_form.search.data))
-
-@app.route('/search_results/<query>')
-@login_required
-def search_results(query):
-    results = Post.query.whoosh_search(query, MAX_SEARCH_RESULTS).all()
-    return render_template('search_results.html',
-            query = query,
-            results = results)
 
 @app.route('/delete/<int:id>')
 @login_required
@@ -188,5 +197,28 @@ def delete(id):
     db.session.commit()
     flash('Your post has been deleted.')
     return redirect(url_for('index'))
+    
+@app.route('/search', methods = ['POST'])
+@login_required
+def search():
+    if not g.search_form.validate_on_submit():
+        return redirect(url_for('index'))
+    return redirect(url_for('search_results', query = g.search_form.search.data))
 
+@app.route('/search_results/<query>')
+@login_required
+def search_results(query):
+    results = Post.query.whoosh_search(query, MAX_SEARCH_RESULTS).all()
+    return render_template('search_results.html',
+        query = query,
+        results = results)
+
+@app.route('/translate', methods = ['POST'])
+@login_required
+def translate():
+    return jsonify({
+        'text': microsoft_translate(
+            request.form['text'],
+            request.form['sourceLang'],
+            request.form['destLang']) })
 

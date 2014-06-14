@@ -10,8 +10,9 @@ class momentjs(object):
     def format(self, fmt):
         return self.render("format(\"%s\")" % fmt)
 
-    def calender(self):
-        return self.render("calender()")
+    def calendar(self):
+        return self.render("calendar()")
 
     def fromNow(self):
-            return self.render("formNow()")
+        return self.render("fromNow()")
+
