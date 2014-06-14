@@ -25,7 +25,7 @@ if not app.debug:
     mail_handler.setLevel(logging.ERROR)
     app.logger.addHandler(mail_handler)
 
-if not app.debug:
+if not app.debug and os.environ.get('HEROKU') is None:
     import logging
     from logging.handlers import RotatingFileHandler
     file_handler = RotatingFileHandler('tmp/LiBlog.log', 'a', 1 * 1024 * 1024, 10)
@@ -34,5 +34,13 @@ if not app.debug:
     app.logger.addHandler(file_handler)
     app.logger.setLevel(logging.INFO)
     app.logger.info('LiBlog startup')
+
+if os.environ.get('HEROKU') is not None:
+    import logging
+    stream_handler = logging.StreamHandler()
+    app.logger.addHandler(stream_handler)
+    app.logger.setLevel(logging.INFO)
+    app.logger.info('LithiumBlogging')
+
 
 from app import views, models

@@ -11,6 +11,7 @@ ADMINS = ['gmercer@gmail.com']
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
+WHOOSH_ENABLED = os.environ.get('HEROKU') is None
 WHOOSH_BASE = os.path.join(basedir, 'search.db')
 
 POSTS_PER_PAGE=15
