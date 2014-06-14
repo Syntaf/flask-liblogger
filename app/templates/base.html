@@ -1,13 +1,13 @@
 <html>
 	<head>
 		{% if title %}
-		<title>{{title}} - microblog</title>
+		<title>{{title}} - Blog Lite</title>
 		{% else %}
-		<title>microblog</title>
+		<title>Lithium Blogging</title>
 		{% endif %}
 	</head>
 	<body>
-		<div>Microblog:
+		<div>LiBlogging:
 			<a href="{{ url_for('index') }}">Home</a>
 			{% if g.user.is_authenticated() %}
 			| <a href="{{ url_for('user', nickname= g.user.nickname) }}">My Profile</a>

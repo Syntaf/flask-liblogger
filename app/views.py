@@ -47,7 +47,7 @@ def index():
 		}
 	]
 	return render_template('index.html',
-		title = 'Home',
+		title = 'LithiumBlogging',
 		user = user,
 		posts = posts)
 
