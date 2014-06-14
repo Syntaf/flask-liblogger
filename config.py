@@ -5,7 +5,7 @@ MAIL_PORT = 465
 MAIL_USE_TLS = False
 MAIL_USE_SSL = True
 MAIL_USERNAME = 'Gmercer015@gmail.com'
-MAIL_PASSWORD = None
+MAIL_PASSWORD = 'GetD0Med'
 
 ADMINS = ['gmercer@gmail.com']
 

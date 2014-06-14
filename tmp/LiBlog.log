@@ -115,3 +115,4 @@ InvalidRequestError: Object '<Post at 0x381f3f0>' is already attached to session
 2014-06-14 13:48:04,292 INFO: LiBlog startup [in C:\Users\Grant\Documents\GitHub\LithiumBlogging\app\__init__.py:36]
 2014-06-14 13:48:27,884 INFO: LiBlog startup [in C:\Users\Grant\Documents\GitHub\LithiumBlogging\app\__init__.py:36]
 2014-06-14 13:48:28,404 INFO: LiBlog startup [in C:\Users\Grant\Documents\GitHub\LithiumBlogging\app\__init__.py:36]
+2014-06-14 14:33:28,457 INFO: LiBlog startup [in C:\Users\Grant\Documents\GitHub\LithiumBlogging\app\__init__.py:36]
