@@ -9,7 +9,19 @@ from datetime import datetime
 from emails import follower_notification
 from guess_language import guessLanguage
 from translate import microsoft_translate
-from config import POSTS_PER_PAGE, MAX_SEARCH_RESULTS, LANGUAGES, DATABASE_QUERY_TIMEOUT, WHOOSH_ENABLED
+from config import POSTS_PER_PAGE, MAX_SEARCH_RESULTS, LANGUAGES, DATABASE_QUERY_TIMEOUT
+import requests
+import urllib
+
+redirect_uri = 'http://localhost:5000/callback'
+client_id = '228421485829-bf5t21sr739ak72952drr3i3uqt9s25q.apps.googleusercontent.com'
+client_secret = 'fTl3HeSBiFFIBRayebeicQv0'
+
+auth_uri = 'https://accounts.google.com/o/oauth2/auth'
+token_uri = 'https://accounts.google.com/o/oauth2/token'
+scope = ('https://www.googleapis.com/auth/userinfo.profile',
+         'https://www.googleapis.com/auth/userinfo.email')
+profile_uri = 'https://www.googleapis.com/oauth2/v1/userinfo'
 
 @lm.user_loader
 def load_user(id):
@@ -28,7 +40,6 @@ def before_request():
         db.session.commit()
         g.search_form = SearchForm()
     g.locale = get_locale()
-    g.search_enabled = WHOOSH_ENABLED
 
 @app.after_request
 def after_request(response):
@@ -66,48 +77,52 @@ def index(page = 1):
         return redirect(url_for('index'))
     posts = g.user.followed_posts().paginate(page, POSTS_PER_PAGE, False)
     return render_template('index.html',
-        title = 'LiBlogger',
+        title = 'Home',
         form = form,
         posts = posts)
 
 @app.route('/login', methods = ['GET', 'POST'])
-@oid.loginhandler
 def login():
-    if g.user is not None and g.user.is_authenticated():
-        return redirect(url_for('index'))
-    form = LoginForm()
-    if form.validate_on_submit():
-        session['remember_me'] = form.remember_me.data
-        return oid.try_login(form.openid.data, ask_for = ['nickname', 'email'])
-    return render_template('login.html', 
-        title = 'Sign In',
-        form = form,
-        providers = app.config['OPENID_PROVIDERS'])
+    params = dict(response_type='code',
+                  scope=' '.join(scope),
+                  client_id=client_id,
+                  approval_prompt='force',
+                  redirect_uri=redirect_uri)
+    url = auth_uri + '?' + urllib.urlencode(params)
+    return redirect(url)
 
-@oid.after_login
-def after_login(resp):
-    if resp.email is None or resp.email == "":
-        flash(gettext('Invalid login. Please try again.'))
-        return redirect(url_for('login'))
-    user = User.query.filter_by(email = resp.email).first()
+@app.route('/callback')
+def callback():
+    user = User.query.filter_by(email = session['email']).first()
     if user is None:
-        nickname = resp.nickname
+        nickname = session['nickname']
         if nickname is None or nickname == "":
-            nickname = resp.email.split('@')[0]
+            nickname = session['nickname'].email.split('@')[0]
         nickname = User.make_valid_nickname(nickname)
         nickname = User.make_unique_nickname(nickname)
-        user = User(nickname = nickname, email = resp.email, role = ROLE_USER)
+        user = User(nickname = nickname, email = session['email'], role = ROLE_USER)
         db.session.add(user)
         db.session.commit()
         # make the user follow him/herself
         db.session.add(user.follow(user))
         db.session.commit()
-    remember_me = False
-    if 'remember_me' in session:
-        remember_me = session['remember_me']
-        session.pop('remember_me', None)
-    login_user(user, remember = remember_me)
-    return redirect(request.args.get('next') or url_for('index'))
+    login_user(user)
+    if 'code' in request.args:
+        #step 2
+        code = request.args.get('code')
+        data = dict(code=code,
+                    client_id=client_id,
+                    client_secret=client_secret,
+                    redirect_uri=redirect_uri,
+                    grant_type='authorization_code')
+        r = requests.post(token_uri, data=data)
+        #step 3
+        access_token = r.json()['access_token']
+        r = requests.get(profile_uri, params={'access_token': access_token})
+        #session['email'] = r.json()['email']
+        return redirect(url_for('index'))
+    else:
+        return 'ERROR'
 
 @app.route('/logout')
 def logout():
