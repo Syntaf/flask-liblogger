@@ -93,6 +93,20 @@ def login():
 
 @app.route('/callback')
 def callback():
+    user = User.query.filter_by(email = session['email']).first()
+    if user is None:
+        nickname = session['nickname']
+        if nickname is None or nickname == "":
+            nickname = session['nickname'].email.split('@')[0]
+        nickname = User.make_valid_nickname(nickname)
+        nickname = User.make_unique_nickname(nickname)
+        user = User(nickname = nickname, email = session['email'], role = ROLE_USER)
+        db.session.add(user)
+        db.session.commit()
+        # make the user follow him/herself
+        db.session.add(user.follow(user))
+        db.session.commit()
+    login_user(user)
     if 'code' in request.args:
         #step 2
         code = request.args.get('code')
@@ -105,21 +119,7 @@ def callback():
         #step 3
         access_token = r.json()['access_token']
         r = requests.get(profile_uri, params={'access_token': access_token})
-        session['email'] = r.json()['email']
-        user = User.query.filter_by(email = session['email']).first()
-        if user is None:
-            nickname = session['nickname']
-            if nickname is None or nickname == "":
-                nickname = session['nickname'].email.split('@')[0]
-            nickname = User.make_valid_nickname(nickname)
-            nickname = User.make_unique_nickname(nickname)
-            user = User(nickname = nickname, email = session['email'], role = ROLE_USER)
-            db.session.add(user)
-            db.session.commit()
-            # make the user follow him/herself
-            db.session.add(user.follow(user))
-            db.session.commit()
-        login_user(user)
+        #session['email'] = r.json()['email']
         return redirect(url_for('index'))
     else:
         return 'ERROR'
