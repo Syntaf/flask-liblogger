@@ -13,7 +13,7 @@ from config import POSTS_PER_PAGE, MAX_SEARCH_RESULTS, LANGUAGES, DATABASE_QUERY
 import requests
 import urllib
 
-redirect_uri = 'http://localhost:5000/callback'
+redirect_uri = 'https://flask-liblogger.herokuapp.com'
 client_id = '228421485829-bf5t21sr739ak72952drr3i3uqt9s25q.apps.googleusercontent.com'
 client_secret = 'fTl3HeSBiFFIBRayebeicQv0'
 
