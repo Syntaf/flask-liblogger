@@ -106,6 +106,7 @@ def callback():
         access_token = r.json()['access_token']
         r = requests.get(profile_uri, params={'access_token': access_token})
         session['email'] = r.json()['email']
+        session['nickname'] = r.json()['nickname']
         user = User.query.filter_by(email = session['email']).first()
         if user is None:
             nickname = session['nickname']
