@@ -27,12 +27,12 @@ WHOOSH_ENABLED = os.environ.get('HEROKU') is None
 DATABASE_QUERY_TIMEOUT = 0.5
 
 # email server
-MAIL_SERVER = 'smtp.gmail.com' # your mailserver
-MAIL_PORT = 465
+MAIL_SERVER = 'localhost' # your mailserver
+MAIL_PORT = 25
 MAIL_USE_TLS = False
-MAIL_USE_SSL = True
-MAIL_USERNAME = 'Gumbieis1337@gmail.com'
-MAIL_PASSWORD = 'GetD0Med5@'
+MAIL_USE_SSL = False
+MAIL_USERNAME = None
+MAIL_PASSWORD = None
 
 # available languages
 LANGUAGES = {
