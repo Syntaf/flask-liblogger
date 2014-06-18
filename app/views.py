@@ -109,7 +109,7 @@ def callback():
         session['nickname'] = r.json()['nickname']
         user = User.query.filter_by(email = session['email']).first()
         if user is None:
-            nickname = session['nickname'].email.split('@')[0]
+            nickname = session['email'].split('@')[0]
             nickname = User.make_valid_nickname(nickname)
             nickname = User.make_unique_nickname(nickname)
             user = User(nickname = nickname, email = session['email'], role = ROLE_USER)
