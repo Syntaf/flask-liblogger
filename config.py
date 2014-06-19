@@ -22,7 +22,7 @@ DATABASE_QUERY_TIMEOUT = 0.5
 
 # email server
 MAIL_SERVER = 'smtp.gmail.com'
-MAIL_PORT = 465
+MAIL_PORT = 587
 MAIL_USE_TLS = True
 MAIL_USE_SSL = True
 MAIL_USERNAME = 'liblog.team@gmail.com'
