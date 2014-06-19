@@ -61,25 +61,25 @@ def internal_error(error):
 @app.route('/index', methods = ['GET', 'POST'])
 @app.route('/index/<int:page>', methods = ['GET', 'POST'])
 @login_required
-def index(page = 1):
+def index(page=1):
     form = PostForm()
     if form.validate_on_submit():
         language = guessLanguage(form.post.data)
         if language == 'UNKNOWN' or len(language) > 5:
             language = ''
-        post = Post(body = form.post.data,
-            timestamp = datetime.utcnow(),
-            author = g.user,
-            language = language)
+        post = Post(body=form.post.data,
+            timestamp=datetime.utcnow(),
+            author=g.user,
+            language=language)
         db.session.add(post)
         db.session.commit()
         flash(gettext('Your post is now live!'))
         return redirect(url_for('index'))
     posts = g.user.followed_posts().paginate(page, POSTS_PER_PAGE, False)
     return render_template('index.html',
-        title = 'Home',
-        form = form,
-        posts = posts)
+        title='Home',
+        form=form,
+        posts=posts)
 
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
@@ -106,14 +106,12 @@ def callback():
         access_token = r.json()['access_token']
         r = requests.get(profile_uri, params={'access_token': access_token})
         session['email'] = r.json()['email']
-        user = User.query.filter_by(email = session['email']).first()
+        user = User.query.filter_by(email=session['email']).first()
         if user is None:
-            nickname = session['nickname']
-            if nickname is None or nickname == "":
-                nickname = session['nickname'].email.split('@')[0]
+            nickname = session['email'].split('@')[0]
             nickname = User.make_valid_nickname(nickname)
             nickname = User.make_unique_nickname(nickname)
-            user = User(nickname = nickname, email = session['email'], role = ROLE_USER)
+            user = User(nickname=nickname, email=session['email'], role=ROLE_USER)
             db.session.add(user)
             db.session.commit()
             # make the user follow him/herself
@@ -162,27 +160,27 @@ def edit():
 @app.route('/follow/<nickname>')
 @login_required
 def follow(nickname):
-    user = User.query.filter_by(nickname = nickname).first()
-    if user == None:
+    user = User.query.filter_by(nickname=nickname).first()
+    if user==None:
         flash('User ' + nickname + ' not found.')
         return redirect(url_for('index'))
     if user == g.user:
         flash(gettext('You can\'t follow yourself!'))
-        return redirect(url_for('user', nickname = nickname))
+        return redirect(url_for('user', nickname=nickname))
     u = g.user.follow(user)
     if u is None:
-        flash(gettext('Cannot follow %(nickname)s.', nickname = nickname))
-        return redirect(url_for('user', nickname = nickname))
+        flash(gettext('Cannot follow %(nickname)s.', nickname=nickname))
+        return redirect(url_for('user', nickname=nickname))
     db.session.add(u)
     db.session.commit()
-    flash(gettext('You are now following %(nickname)s!', nickname = nickname))
+    flash(gettext('You are now following %(nickname)s!', nickname=nickname))
     follower_notification(user, g.user)
-    return redirect(url_for('user', nickname = nickname))
+    return redirect(url_for('user', nickname=nickname))
 
 @app.route('/unfollow/<nickname>')
 @login_required
 def unfollow(nickname):
-    user = User.query.filter_by(nickname = nickname).first()
+    user = User.query.filter_by(nickname=nickname).first()
     if user == None:
         flash('User ' + nickname + ' not found.')
         return redirect(url_for('index'))

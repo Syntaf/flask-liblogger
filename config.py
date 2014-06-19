@@ -21,12 +21,12 @@ WHOOSH_BASE = os.path.join(basedir, 'search.db')
 DATABASE_QUERY_TIMEOUT = 0.5
 
 # email server
-MAIL_SERVER = 'smtp.gmail.com'
+MAIL_SERVER = 'smtp.googlemail.com'
 MAIL_PORT = 465
 MAIL_USE_TLS = False
 MAIL_USE_SSL = True
-MAIL_USERNAME = 'Gumbieis1337@gmail.com'
-MAIL_PASSWORD = 'GetD0Med5@'
+MAIL_USERNAME = 'liblog.team@gmail.com'
+MAIL_PASSWORD = 'lithiumreact'
 
 # available languages
 LANGUAGES = {

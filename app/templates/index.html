@@ -2,15 +2,15 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>{{ _('Hi, %(nickname)s!', nickname = g.user.nickname) }}</h1>
+<h1>{{ _('Hi, %(nickname)s', nickname = g.user.nickname) }}</h1>
 {% include 'flash.html' %}
 <div class="well">
     <form class="form-horizontal" action="" method="post" name="post">
         {{form.hidden_tag()}}
         <div class="control-group{% if form.errors.post %} error{% endif %}">
-            <label class="control-label" for="post">{{ _('Say something:') }}</label>
+			<font color="black"><label class="control-label" for="post">{{ _('Say something:') }}</label></font>
             <div class="controls">
-                {{ form.post(size = 30, maxlength = 140) }}
+                {{ form.post(size = 120, maxlength = 200) }}
                 {% for error in form.errors.post %}
                     <span class="help-inline">[{{error}}]</span><br>
                 {% endfor %}
