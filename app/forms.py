@@ -35,3 +35,4 @@ class PostForm(Form):
     
 class SearchForm(Form):
     search = TextField('search', validators = [Required()])
+
