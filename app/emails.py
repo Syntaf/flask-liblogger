@@ -3,18 +3,17 @@ from flask.ext.mail import Message
 from app import mail
 from decorators import async
 from config import ADMINS
+import requests
 
-@async    
-def send_async_email(msg):
-    mail.send(msg)
-    
+@async
 def send_email(subject, sender, recipients, text_body, html_body):
-    msg = Message(subject, sender=sender, recipients=recipients)
-    msg.body = text_body
-    msg.html = html_body
-    send_async_email(msg)
-    #thr = threading.Thread(target = send_async_email, args = [msg])
-    #thr.start()
+    return requests.post(
+        "https://api.mailgun.net/v2/sandbox817101cca3eb41cca8651824d52d350c.mailgun.org/messages",
+        auth=("api", "key-1rksvcw43bl7h4rbdpjg0gqpc969-z41"),
+        data={"from": "Mailgun Sandbox <postmaster@sandbox817101cca3eb41cca8651824d52d350c.mailgun.org>",
+        "to": recipients,
+        "subject: ": subject,
+        "text": text_body})
 
     
 def follower_notification(followed, follower):
