@@ -2,18 +2,16 @@ from flask import render_template
 from flask.ext.mail import Message
 from app import mail
 from decorators import async
+from config import LOGIN, PASSWORD
 from config import ADMINS
 import requests
 
 @async
 def send_email(subject, sender, recipients, text_body, html_body):
-    return requests.post(
-        "https://api.mailgun.net/v2/sandbox817101cca3eb41cca8651824d52d350c.mailgun.org/messages",
-        auth=("api", "key-1rksvcw43bl7h4rbdpjg0gqpc969-z41"),
-        data={"from": "Mailgun Sandbox <postmaster@sandbox817101cca3eb41cca8651824d52d350c.mailgun.org>",
-        "to": recipients,
-        "subject: ": subject,
-        "text": text_body})
+    smtp = SMTP("smtp.mailgun.org", 587)
+    smtp.login(LOGIN, PASSWORD)
+    smtp.sendmail("liblog.team@gmail.com", ADMINS[0], text_body)
+    smtp.quit()
 
     
 def follower_notification(followed, follower):
