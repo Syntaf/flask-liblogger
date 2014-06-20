@@ -3,7 +3,7 @@ import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 CSRF_ENABLED = True
-SECRET_KEY = 'you-will-never-guess'
+SECRET_KEY = 'qm4d-9lcy-dihb'
 
 OPENID_PROVIDERS = [
     { 'name': 'Google', 'url': 'https://www.google.com/accounts/o8/id' },
@@ -21,12 +21,12 @@ WHOOSH_BASE = os.path.join(basedir, 'search.db')
 DATABASE_QUERY_TIMEOUT = 0.5
 
 # email server
-MAIL_SERVER = 'smtp.googlemail.com'
-MAIL_PORT = 465
+MAIL_SERVER = 'localhost:5000'
+MAIL_PORT = 25
 MAIL_USE_TLS = False
-MAIL_USE_SSL = True
-MAIL_USERNAME = 'liblog.team@gmail.com'
-MAIL_PASSWORD = 'lithiumreact'
+MAIL_USE_SSL = False
+LOGIN = 'liblog.team@gmail.com'
+PASSWORD = 'lithiumreact'
 
 # available languages
 LANGUAGES = {
