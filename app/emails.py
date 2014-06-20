@@ -8,10 +8,13 @@ import requests
 
 @async
 def send_email(subject, sender, recipients, text_body, html_body):
-    smtp = SMTP("smtp.mailgun.org", 587)
-    smtp.login(LOGIN, PASSWORD)
-    smtp.sendmail("liblog.team@gmail.com", ADMINS[0], text_body)
-    smtp.quit()
+    request_url = 'https://api.mailgun.net/v2/{0}/messages'.format(sandbox)
+    request = requests.post(request_url, auth=('api', key), data={
+        'from': 'lith@example.com',
+        'to': ADMINS[0],
+        'subject': subject,
+        'text': text_body
+    })
 
     
 def follower_notification(followed, follower):
