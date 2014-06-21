@@ -2,9 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4f17f1f3-f21c-4f83-bf91-48a541bfda4e" name="Default" comment="">
-      <change type="DELETED" beforePath="C:\Users\Grant\Documents\GitHub\flask-liblogger\app\emails.py" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Grant\Documents\GitHub\flask-liblogger\app\templates\follower_email.html" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Grant\Documents\GitHub\flask-liblogger\app\templates\follower_email.txt" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views.py" afterPath="$PROJECT_DIR$/app/views.py" />
     </list>
     <ignored path="flask-liblogger.iws" />
@@ -95,8 +92,8 @@
       <file leaf-file-name="views.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="3.4173765" vertical-offset="0" max-vertical-offset="4097">
-              <caret line="118" column="24" selection-start-line="118" selection-start-column="24" selection-end-line="118" selection-end-column="24" />
+            <state vertical-scroll-proportion="0.42348754" vertical-offset="102" max-vertical-offset="4097">
+              <caret line="20" column="31" selection-start-line="20" selection-start-column="31" selection-end-line="20" selection-end-column="31" />
               <folding>
                 <element signature="e#0#89#0" expanded="true" />
               </folding>
@@ -842,8 +839,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="3.4173765" vertical-offset="0" max-vertical-offset="4097">
-          <caret line="118" column="24" selection-start-line="118" selection-start-column="24" selection-end-line="118" selection-end-column="24" />
+        <state vertical-scroll-proportion="0.42348754" vertical-offset="102" max-vertical-offset="4097">
+          <caret line="20" column="31" selection-start-line="20" selection-start-column="31" selection-end-line="20" selection-end-column="31" />
           <folding>
             <element signature="e#0#89#0" expanded="true" />
           </folding>
