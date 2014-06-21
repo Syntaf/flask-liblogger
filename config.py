@@ -21,12 +21,8 @@ WHOOSH_BASE = os.path.join(basedir, 'search.db')
 DATABASE_QUERY_TIMEOUT = 0.5
 
 # email server
-MAIL_SERVER = 'localhost:5000'
-MAIL_PORT = 25
-MAIL_USE_TLS = False
-MAIL_USE_SSL = False
-LOGIN = 'liblog.team@gmail.com'
-PASSWORD = 'lithiumreact'
+KEY = '1vc0bqwd0z19'
+SANDBOX = 'sandbox817101cca3eb41cca8651824d52d350c.mailgun.org'
 
 # available languages
 LANGUAGES = {

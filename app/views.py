@@ -6,16 +6,15 @@ from app import app, db, lm, oid, babel
 from forms import LoginForm, EditForm, PostForm, SearchForm
 from models import User, ROLE_USER, ROLE_ADMIN, Post
 from datetime import datetime
-from emails import follower_notification
 from guess_language import guessLanguage
 from translate import microsoft_translate
 from config import POSTS_PER_PAGE, MAX_SEARCH_RESULTS, LANGUAGES, DATABASE_QUERY_TIMEOUT
 import requests
 import urllib
 
-redirect_uri = 'https://flask-liblogger.herokuapp.com/callback'
-client_id = '228421485829-bf5t21sr739ak72952drr3i3uqt9s25q.apps.googleusercontent.com'
-client_secret = 'fTl3HeSBiFFIBRayebeicQv0'
+redirect_uri = 'http://localhost:5000/callback'
+client_id = '228421485829-rkk2b1tkhm2uaein7kh0cavp3qo9ku6s.apps.googleusercontent.com'
+client_secret = 'WprbYZLzBFngLBSY-xLftN3k' 
 
 auth_uri = 'https://accounts.google.com/o/oauth2/auth'
 token_uri = 'https://accounts.google.com/o/oauth2/token'
@@ -174,7 +173,6 @@ def follow(nickname):
     db.session.add(u)
     db.session.commit()
     flash(gettext('You are now following %(nickname)s!', nickname=nickname))
-    follower_notification(user, g.user)
     return redirect(url_for('user', nickname=nickname))
 
 @app.route('/unfollow/<nickname>')
