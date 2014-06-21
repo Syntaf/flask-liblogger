@@ -6,7 +6,6 @@ from config import KEY, SANDBOX
 from config import ADMINS
 import requests
 
-@async
 def send_email(subject, sender, recipients, text_body, html_body):
     request_url = 'https://api.mailgun.net/v2/{0}/messages'.format(SANDBOX)
     request = requests.post(request_url, auth=('api', KEY), data={
