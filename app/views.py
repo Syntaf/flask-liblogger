@@ -119,7 +119,7 @@ def callback():
         login_user(user)
         return redirect(url_for('index'))
     else:
-        return render_template('404.html'), 404
+        return 'ERROR'
 
 @app.route('/logout')
 def logout():
