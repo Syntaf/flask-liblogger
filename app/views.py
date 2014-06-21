@@ -93,6 +93,7 @@ def login():
 @app.route('/callback')
 def callback():
     if 'code' in request.args:
+        flash('Successful')
         #step 2
         code = request.args.get('code')
         data = dict(code=code,
