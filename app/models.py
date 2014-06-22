@@ -1,7 +1,7 @@
 from hashlib import md5
 from app import db
 from app import app
-from config import WHOOSH_ENABLED
+import flask.ext.whooshalchemy as whooshalchemy
 import re
 
 ROLE_USER = 0
@@ -81,7 +81,7 @@ class Post(db.Model):
     __searchable__ = ['body']
     
     id = db.Column(db.Integer, primary_key = True)
-    body = db.Column(db.String(140))
+    body = db.Column(db.String(240))
     timestamp = db.Column(db.DateTime)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     language = db.Column(db.String(5))
@@ -89,6 +89,4 @@ class Post(db.Model):
     def __repr__(self): # pragma: no cover
         return '<Post %r>' % (self.body)
         
-if WHOOSH_ENABLED:
-    import flask.ext.whooshalchemy as whooshalchemy
-    whooshalchemy.whoosh_index(app, Post)
+whooshalchemy.whoosh_index(app, Post)
