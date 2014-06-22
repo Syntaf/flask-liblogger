@@ -10,7 +10,7 @@ class LoginForm(Form):
     
 class EditForm(Form):
     nickname = TextField('nickname', validators = [Required()])
-    about_me = TextAreaField('about_me', validators = [Length(min = 0, max = 140)])
+    about_me = TextAreaField('about_me', validators = [Length(min = 0, max = 280)])
     
     def __init__(self, original_nickname, *args, **kwargs):
         Form.__init__(self, *args, **kwargs)
@@ -31,7 +31,7 @@ class EditForm(Form):
         return True
         
 class PostForm(Form):
-	post = TextAreaField('post', validators = [Required()])
+	post = TextAreaField('post', validators = [Required(), Length(min = 0, max = 280)])
     
 class SearchForm(Form):
     search = TextField('search', validators = [Required()])
