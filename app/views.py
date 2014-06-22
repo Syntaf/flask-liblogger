@@ -83,13 +83,21 @@ def index(page = 1):
 
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
-    params = dict(response_type='code',
+	if g.user is not None and g.user.is_authenticated():
+		return redirect(url_for('index'))
+	if form.validate_on_submit():
+		session['remember_me'] = form.remember_me.data
+		params = dict(response_type='code',
                   scope=' '.join(scope),
                   client_id=client_id,
                   approval_prompt='force',
                   redirect_uri=redirect_uri)
-    url = auth_uri + '?' + urllib.urlencode(params)
-    return redirect(url)
+   		url = auth_uri + '?' + urllib.urlencode(params)
+    	return redirect(url)
+	return render_template('login.html',
+			title = 'Sign In',
+			form = form,
+			providers = app.config['OPENID_PROVIDERS'])
 
 @app.route('/callback')
 def callback():
