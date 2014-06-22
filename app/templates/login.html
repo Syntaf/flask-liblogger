@@ -20,12 +20,13 @@ function set_openid(openid, pr)
     <h3>{{ _('Please Sign In') }}</h3>
     <form class="form" action="" method="post" name="login">
         {{form.hidden_tag()}}
-        <div class="help-block">{{ _('Click on your OpenID provider below:') }}</div>
+        <div class="help-block">{{ _('Currently Only Google is Supported, Sorry!') }}</div>
         <div class="control-group">
             {% for pr in providers %}
             <a href="javascript:set_openid('{{pr.url}}', '{{pr.name}}');"><img src="/static/img/{{pr.name.lower()}}.png" class="img-polaroid" style="margin:2px;" /></a>
             {% endfor %}
         </div>
+		<!--
         <div class="control-group{% if form.errors.openid %} error{% endif %}">
             <label class="control-label" for="openid">{{ _('Or enter your OpenID here:') }}</label>
             <div class="controls">
@@ -34,7 +35,7 @@ function set_openid(openid, pr)
                     <span class="help-inline">[{{error}}]</span><br>
                 {% endfor %}
             </div>
-        </div>
+		</div> --!>
         <div class="control-group">
             <div class="controls">
                 <label class="checkbox" for="remember_me">

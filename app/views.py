@@ -13,6 +13,7 @@ from config import POSTS_PER_PAGE, MAX_SEARCH_RESULTS, LANGUAGES, DATABASE_QUERY
 import requests
 import urllib
 
+next = ''
 redirect_uri = 'https://flask-liblogger.herokuapp.com/callback'
 client_id = '228421485829-bf5t21sr739ak72952drr3i3uqt9s25q.apps.googleusercontent.com'
 client_secret = 'fTl3HeSBiFFIBRayebeicQv0'
@@ -85,15 +86,17 @@ def index(page = 1):
 def login():
 	if g.user is not None and g.user.is_authenticated():
 		return redirect(url_for('index'))
-	if form.validate_on_submit():
+	form = LoginForm()
+	if request.method == 'POST':
 		session['remember_me'] = form.remember_me.data
 		params = dict(response_type='code',
                   scope=' '.join(scope),
                   client_id=client_id,
                   approval_prompt='force',
                   redirect_uri=redirect_uri)
-   		url = auth_uri + '?' + urllib.urlencode(params)
-    	return redirect(url)
+		url = auth_uri + '?' + urllib.urlencode(params)
+		next = request.args.get('next')
+		return redirect(url)
 	return render_template('login.html',
 			title = 'Sign In',
 			form = form,
@@ -126,7 +129,7 @@ def callback():
             db.session.add(user.follow(user))
             db.session.commit()
         login_user(user)
-        return redirect(url_for('index'))
+        return redirect(next or url_for('index'))
     else:
         return 'ERROR'
 
