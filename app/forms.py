@@ -31,7 +31,7 @@ class EditForm(Form):
         return True
         
 class PostForm(Form):
-    post = TextField('post', validators = [Required()])
+	post = TextAreaField('post', validators = [Required()])
     
 class SearchForm(Form):
     search = TextField('search', validators = [Required()])
