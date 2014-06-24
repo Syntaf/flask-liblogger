@@ -18,9 +18,9 @@ next = {}
 next['RAW'] = ''
 next['URL'] = ''
 next['NICKNAME'] = ''
-redirect_uri = 'https://flask-liblogger.herokuapp.com/callback'
-client_id = '228421485829-bf5t21sr739ak72952drr3i3uqt9s25q.apps.googleusercontent.com'
-client_secret = 'fTl3HeSBiFFIBRayebeicQv0'
+redirect_uri = ''
+client_id = ''
+client_secret = ''
 
 auth_uri = 'https://accounts.google.com/o/oauth2/auth'
 token_uri = 'https://accounts.google.com/o/oauth2/token'
