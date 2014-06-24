@@ -3,7 +3,7 @@ import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 CSRF_ENABLED = True
-SECRET_KEY = 'qm4d-9lcy-dihb'
+SECRET_KEY = ''
 
 OPENID_PROVIDERS = [
     { 'name': 'Google', 'url': 'https://www.googleapis.com/auth/plus.login' }]

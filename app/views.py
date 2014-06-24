@@ -10,13 +10,17 @@ from emails import follower_notification
 from guess_language import guessLanguage
 from translate import microsoft_translate
 from config import POSTS_PER_PAGE, MAX_SEARCH_RESULTS, LANGUAGES, DATABASE_QUERY_TIMEOUT
+import re
 import requests
 import urllib
 
-next = ''
-redirect_uri = 'https://flask-liblogger.herokuapp.com/callback'
-client_id = '228421485829-bf5t21sr739ak72952drr3i3uqt9s25q.apps.googleusercontent.com'
-client_secret = 'fTl3HeSBiFFIBRayebeicQv0'
+next = {}
+next['RAW'] = ''
+next['URL'] = ''
+next['NICKNAME'] = ''
+redirect_uri = ''
+client_id = ''
+client_secret = ''
 
 auth_uri = 'https://accounts.google.com/o/oauth2/auth'
 token_uri = 'https://accounts.google.com/o/oauth2/token'
@@ -53,6 +57,7 @@ def after_request(response):
 def internal_error(error):
     return render_template('404.html'), 404
 
+
 @app.errorhandler(500)
 def internal_error(error):
     db.session.rollback()
@@ -84,23 +89,25 @@ def index(page = 1):
 
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
-	if g.user is not None and g.user.is_authenticated():
-		return redirect(url_for('index'))
-	form = LoginForm()
-	if request.method == 'POST':
-		session['remember_me'] = form.remember_me.data
-		params = dict(response_type='code',
+    if g.user is not None and g.user.is_authenticated():
+        return redirect(url_for('index'))
+    form = LoginForm()
+    if request.method == 'POST':
+        session['remember_me'] = form.remember_me.data
+        params = dict(response_type='code',
                   scope=' '.join(scope),
                   client_id=client_id,
                   approval_prompt='force',
                   redirect_uri=redirect_uri)
-		url = auth_uri + '?' + urllib.urlencode(params)
-		next = request.args.get('next')
-		return redirect(url)
-	return render_template('login.html',
-			title = 'Sign In',
-			form = form,
-			providers = app.config['OPENID_PROVIDERS'])
+        url = auth_uri + '?' + urllib.urlencode(params)
+        return redirect(url)
+    next['RAW'] = request.args.get('next')
+    next['URL'] = next['RAW'].rsplit('/', 1)[0]
+    next['NICKNAME'] = re.search(r'/([^/]*)$', next['RAW']).group(1)
+    return render_template('login.html',
+            title = 'Sign In',
+            form = form,
+            providers = app.config['OPENID_PROVIDERS'])
 
 @app.route('/callback')
 def callback():
@@ -129,7 +136,10 @@ def callback():
             db.session.add(user.follow(user))
             db.session.commit()
         login_user(user)
-        return redirect(next or url_for('index'))
+        if next['URL'] == '/user':
+            return redirect(url_for('user', nickname = next['NICKNAME']))
+        else:
+            return redirect(url_for('index'))
     else:
         return 'ERROR'
 
