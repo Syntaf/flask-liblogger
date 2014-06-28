@@ -109,7 +109,7 @@ def login():
             form = form,
             providers = app.config['OPENID_PROVIDERS'])
 
-@app.route('/callback')
+@app.route('/oauth2callback')
 def callback():
     if 'code' in request.args:
         #step 2
