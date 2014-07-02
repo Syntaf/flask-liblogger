@@ -9,11 +9,11 @@ next_ = {}
 next_['RAW'] = ''
 next_['URL'] = ''
 next_['NICKNAME'] = ''
-redirect_uri = 'http://localhost:5000/oauth2callback'
-client_id = '228421485829-rkk2b1tkhm2uaein7kh0cavp3qo9ku6s.apps.googleusercontent.com'
-client_secret = 'WprbYZLzBFngLBSY-xLftN3k'
+redirect_uri = ''
+client_id = ''
+client_secret = ''
 
-auth_uri = 'https://accounts.google.com/o/oauth2/auth'
+auth_uri = ''
 token_uri = 'https://accounts.google.com/o/oauth2/token'
 scope = ('https://www.googleapis.com/auth/userinfo.profile',
          'https://www.googleapis.com/auth/userinfo.email')
