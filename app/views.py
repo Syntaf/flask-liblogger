@@ -10,23 +10,11 @@ from emails import follower_notification
 from guess_language import guessLanguage
 from translate import microsoft_translate
 from config import POSTS_PER_PAGE, MAX_SEARCH_RESULTS, LANGUAGES, DATABASE_QUERY_TIMEOUT
+from config import redirect_uri, client_id, client_secret, auth_uri, token_uri, scope, profile_uri
+from config import next_
 import re
 import requests
 import urllib
-
-next = {}
-next['RAW'] = ''
-next['URL'] = ''
-next['NICKNAME'] = ''
-redirect_uri = ''
-client_id = ''
-client_secret = ''
-
-auth_uri = 'https://accounts.google.com/o/oauth2/auth'
-token_uri = 'https://accounts.google.com/o/oauth2/token'
-scope = ('https://www.googleapis.com/auth/userinfo.profile',
-         'https://www.googleapis.com/auth/userinfo.email')
-profile_uri = 'https://www.googleapis.com/oauth2/v1/userinfo'
 
 @lm.user_loader
 def load_user(id):
@@ -101,15 +89,15 @@ def login():
                   redirect_uri=redirect_uri)
         url = auth_uri + '?' + urllib.urlencode(params)
         return redirect(url)
-    next['RAW'] = request.args.get('next')
-    next['URL'] = next['RAW'].rsplit('/', 1)[0]
-    next['NICKNAME'] = re.search(r'/([^/]*)$', next['RAW']).group(1)
+    next_['RAW'] = request.args.get('next')
+    next_['URL'] = next_['RAW'].rsplit('/', 1)[0]
+    next_['NICKNAME'] = re.search(r'/([^/]*)$', next_['RAW']).group(1)
     return render_template('login.html',
             title = 'Sign In',
             form = form,
             providers = app.config['OPENID_PROVIDERS'])
 
-@app.route('/callback')
+@app.route('/oauth2callback')
 def callback():
     if 'code' in request.args:
         #step 2

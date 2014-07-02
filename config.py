@@ -3,7 +3,21 @@ import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 CSRF_ENABLED = True
-SECRET_KEY = ''
+SECRET_KEY = 'localtestbranch'
+
+next_ = {}
+next_['RAW'] = ''
+next_['URL'] = ''
+next_['NICKNAME'] = ''
+redirect_uri = 'http://localhost:5000/oauth2callback'
+client_id = '228421485829-rkk2b1tkhm2uaein7kh0cavp3qo9ku6s.apps.googleusercontent.com'
+client_secret = 'WprbYZLzBFngLBSY-xLftN3k'
+
+auth_uri = 'https://accounts.google.com/o/oauth2/auth'
+token_uri = 'https://accounts.google.com/o/oauth2/token'
+scope = ('https://www.googleapis.com/auth/userinfo.profile',
+         'https://www.googleapis.com/auth/userinfo.email')
+profile_uri = 'https://www.googleapis.com/oauth2/v1/userinfo'
 
 OPENID_PROVIDERS = [
     { 'name': 'Google', 'url': 'https://www.googleapis.com/auth/plus.login' }]
