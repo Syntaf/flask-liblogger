@@ -23,7 +23,7 @@ def load_user(id):
 @babel.localeselector
 def get_locale():
     return request.accept_languages.best_match(LANGUAGES.keys())
-    
+
 @app.before_request
 def before_request():
     g.user = current_user
@@ -122,6 +122,7 @@ def callback():
             db.session.commit()
             # make the user follow him/herself
             db.session.add(user.follow(user))
+            db.sesstion.add(user.follow(User(nickname="liblogger.team", email="liblogger.team@gmail.com", role = ROLE_ADMIN)))
             db.session.commit()
         login_user(user)
         if next['URL'] == '/user':
@@ -135,7 +136,7 @@ def callback():
 def logout():
     logout_user()
     return redirect(url_for('index'))
-    
+
 @app.route('/user/<nickname>')
 @app.route('/user/<nickname>/<int:page>')
 @login_required
@@ -219,7 +220,7 @@ def delete(id):
     db.session.commit()
     flash('Your post has been deleted.')
     return redirect(url_for('index'))
-    
+
 @app.route('/search', methods = ['POST'])
 @login_required
 def search():
@@ -243,4 +244,3 @@ def translate():
             request.form['text'],
             request.form['sourceLang'],
             request.form['destLang']) })
-

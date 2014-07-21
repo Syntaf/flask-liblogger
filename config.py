@@ -55,7 +55,7 @@ MS_TRANSLATOR_CLIENT_ID = '' # enter your MS translator app id here
 MS_TRANSLATOR_CLIENT_SECRET = '' # enter your MS translator app secret here
 
 # administrator list
-ADMINS = ['gmercer015@gmail.com']
+ADMINS = ['gmercer015@gmail.com', 'liblogger.team@gmail.com']
 
 # pagination
 POSTS_PER_PAGE = 50
