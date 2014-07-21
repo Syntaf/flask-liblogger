@@ -16,8 +16,7 @@ simply run `setup.py` to have the script automaticall create a virtual enviromen
 - Python development package (`python-dev` for most Linux distributions)
 - git
  
-The sqlite database must also be created before the application can run, and the `db_create.py` script takes care of that. See the [Database tutorial](http://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-iv-database) for the details.
-
+The sqlite database must also be created before the application can run, and the `db_create.py` script takes care of that.
 Running
 -------
 
